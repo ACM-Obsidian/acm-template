@@ -1,7 +1,7 @@
 // string is 1-base, sa is 1-base
-int w[MAXN];
+int w[MAXM];
 
-inline void Sort(int a[], int ret[], int n, int m = MAXN - 1) {
+inline void Sort(int a[], int ret[], int n, int m = MAXM - 1) {
 	for (int i = 0; i <= m; i++) w[i] = 0;
 	for (int i = 1; i <= n; i++) w[a[i]]++;
 	for (int i = 1; i <= m; i++) w[i] += w[i - 1];
