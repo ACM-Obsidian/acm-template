@@ -41,3 +41,6 @@ inline void getHeight(int ch[], int sa[], int height[], int n) {
 	}
 }
 
+void Clear(void) {
+}
+
