@@ -26,3 +26,7 @@ inline void Add(int x) {
 	last = np;
 }
 
+void Clear(void) {
+	data = POOL; last = root = data++;
+}
+
