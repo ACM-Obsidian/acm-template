@@ -338,10 +338,10 @@ double dis(point3 a) {
 	return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 }
 int parallel(point3 a, point3 b) {
-	return fabs((a % b) * (a % b) / ((a * a) * (b * b))) < eps;
+	return a * a < eps * eps || b * b < eps * eps || (a % b) * (a % b) / ((a * a) * (b * b)) < eps * eps;
 }
 int perpend(point3 a, point3 b) {
-	return fabs((a * b) * (a * b) / ((a * a) * (b * b))) < eps;
+	return a * a < eps * eps || b * b < eps * eps || (a * b) * (a * b) / ((a * a) * (b * b)) < eps * eps;
 }
 struct line3 {
 	point3 a, s;
