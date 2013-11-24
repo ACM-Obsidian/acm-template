@@ -5,7 +5,7 @@ const int MAXN = 100010;
 
 struct Node {
 	Node *ch[2], *p; int size, value;
-	int delta; bool rev;
+	bool rev;
 	inline bool dir(void) {return p->ch[1] == this;}
 	inline void SetC(Node *x, bool d) {
 		ch[d] = x; x->p = this;
@@ -13,27 +13,25 @@ struct Node {
 	inline void Rev(void) {
 		swap(ch[0], ch[1]); rev ^= 1;
 	}
-	inline void Add(int d) {
-		delta += d; value += d;
-	}
-	inline void Push(void) {
+	// null永远不会push
+	inline void Push(void) { 
 		if (rev) {
 			ch[0]->Rev();
 			ch[1]->Rev();
 			rev = 0;
 		}
-		ch[0]->Add(delta); ch[1]->Add(delta); delta = 0;
 	}
-	inline void Update(void) {
+	// null永远不会update
+	inline void Update(void) { 
 		size = ch[0]->size + ch[1]->size + 1;
 	}
 	inline void initInfo(void) {
-		delta = 0; rev = 0;
+		rev = 0;
 	}
-};
+}Tnull, *null = &Tnull, *data, POOL[MAXN];
 
 class Splay {public:
-	Node *root, Tnull, *null, *data, POOL[MAXN];
+	Node *root;
 	inline void clear(void) {
 		data = POOL; root = null = &Tnull;
 	}
@@ -83,7 +81,7 @@ class Splay {public:
 
 	// 以下为splay当作平衡树使用
 
-	// 查找树中value = v的元素
+	// 查找树中value = v的元素, 返回之后splay
 	inline Node* find(int v) {
 		Node *tmp = root;
 		while (tmp != null) {
@@ -94,7 +92,7 @@ class Splay {public:
 		return null;
 	}
 
-	// 统计有多少元素小于等于v, 当flag = 1时，统计多少元素严格小于v
+	// 统计有多少元素小于等于v, 当flag = 1时，统计多少元素严格小于v, 一定要记得splay最后的那个tmp
 	inline int Count(int v, bool flag = 0) {
 		Node *tmp = root; int ret = 0;
 		while (tmp != null) {
@@ -117,25 +115,28 @@ class Splay {public:
 		Node *L = getMax(x->ch[0]), *R = getMax(x->ch[1]);
 		splay(L, x); splay(R, x);
 		L->SetC(R, 1); L->p = null; root = L;
+		L->Update();
 	}
 
-	// 插入一个值为value的节点，初始要以Insert(root, null, value)来调用
-	inline void Insert(Node *&now, Node* father, int value) {
+	// 插入一个值为value的节点，初始要以Insert(root, null, value)来调用, 返回之后splay
+	inline Node* Insert(Node *&now, Node* father, int value) {
 		if (now == null) {
 			now = Renew(value); now->p = father;
-			return;
+			return now;
 		}
+		Node *ret;
 		now->Push();
-		if (value <= now->value) Insert(now->ch[0], now, value);
-		else Insert(now->ch[1], now, value);
+		if (value <= now->value) ret = Insert(now->ch[0], now, value);
+		else ret = Insert(now->ch[1], now, value);
 		now->Update();
+		return ret;
 	}
 
 	// 以下为splay维护序列, 初始要在原序列中放入一个-inf和inf来防止边界条件
 
-	// 得到原数列中[l,r]区间对应的结点
-	inline Node* getInverval(int l, int r) {
-		assert(l <= r);
+	// 得到原数列中[l,r]区间对应的结点，如果l == r + 1则表示是一个空区间
+	inline Node* getInterval(int l, int r) {
+		assert(l <= r + 1);
 		Node *L = getKth(l), *R = getKth(r + 2);
 		splay(L, null); splay(R, L);
 		return R->ch[0];
@@ -143,7 +144,7 @@ class Splay {public:
 
 	// 删除一段区间[l,r]
 	inline void eraseInterval(int l, int r) {
-		getInverval(l, r);
+		getInterval(l, r);
 		root->ch[1]->ch[0] = null;
 		root->ch[1]->Update();
 		root->Update();
@@ -151,9 +152,9 @@ class Splay {public:
 
 	// 在位置l的后面插入一段区间x (0 <= l <= n)
 	inline void insertInterval(int l, Node *x) {
-		Node *L = getKth(l), *R = getKth(l + 1);
+		Node *L = getKth(l + 1), *R = getKth(l + 2);
 		splay(L, null); splay(R, L);
-		R->ch[0]->SetC(x, 0);
+		R->SetC(x, 0);
 		R->Update(); L->Update();
 	}
 
@@ -168,5 +169,10 @@ class Splay {public:
 		ret->Update();
 		return ret;
 	}
-};
+}T;
+
+void clear(void) {
+	data = POOL;
+	T.root = null;
+}
 
