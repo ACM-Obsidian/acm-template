@@ -94,13 +94,15 @@ class Splay {public:
 
 	// 统计有多少元素小于等于v, 当flag = 1时，统计多少元素严格小于v, 一定要记得splay最后的那个tmp
 	inline int Count(int v, bool flag = 0) {
-		Node *tmp = root; int ret = 0;
+		Node *tmp = root, *last = null; int ret = 0;
 		while (tmp != null) {
 			tmp->Push();
+			last = tmp;
 			if ((!flag && tmp->value > v) || (flag && tmp->value >= v)) {
 				tmp = tmp->ch[0];
 			} else ret += tmp->ch[0]->size + 1, tmp = tmp->ch[1];
 		}
+		if (last != null) splay(last, null);
 		return ret;
 	}
 
