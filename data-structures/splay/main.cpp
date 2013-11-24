@@ -32,9 +32,6 @@ struct Node {
 
 class Splay {public:
 	Node *root;
-	inline void clear(void) {
-		data = POOL; root = null = &Tnull;
-	}
 	inline void rotate(Node *x) {
 		Node *p = x->p; bool d = x->dir();
 		p->Push(); x->Push();
