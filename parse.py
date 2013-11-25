@@ -14,11 +14,11 @@ def dfs(level, path):
             main += "\\%ssection{%s}"%(level, j) + "\n"
             dfs(level + "sub", i)
         else:
-            if (level != ""): main += "\\code{%s}\\newpage"%(j) + "\n"
+            if (j == remark): main += "\\input{%s}\n"%(i)
+            else: 
+                if (level != ""): main += "\\code{%s}\\newpage"%(i) + "\n"
 
 dfs("", ".")
-
-print main
 
 print r"""
 
@@ -49,7 +49,7 @@ print r"""
 	commentstyle=\itshape\color{mygreen}, 
 }
 
-\newcommand{\code}[1]{\lstinputlisting{1}}
+\newcommand{\code}[1]{\lstinputlisting{#1}}
 
 \geometry{margin=1in}
 
