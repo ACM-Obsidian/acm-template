@@ -7,4 +7,4 @@ main.tex: parse.py
 
 .PHONY: clean
 clean:
-	rm main.out main.aux main.log main.toc -f
+	rm main.out main.aux main.log main.toc main.tex main.pdf -f
