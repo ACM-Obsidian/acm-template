@@ -59,10 +59,12 @@ point2 rotate(point2 a, double th) {
 	return b;
 }
 int parallel(point2 a, point2 b) {
-	return a * a < eps * eps || b * b < eps * eps || (a % b) * (a % b) / ((a * a) * (b * b)) < eps * eps;
+	return a * a < eps * eps || b * b < eps * eps
+		|| (a % b) * (a % b) / ((a * a) * (b * b)) < eps * eps;
 }
 int perpend(point2 a, point2 b) {
-	return a * a < eps * eps || b * b < eps * eps || (a * b) * (a * b) / ((a * a) * (b * b)) < eps * eps;
+	return a * a < eps * eps || b * b < eps * eps
+		|| (a * b) * (a * b) / ((a * a) * (b * b)) < eps * eps;
 }
 struct line2 {
 	point2 a, s;
@@ -228,14 +230,20 @@ int convex_gen(const convex2 &a, convex2 &b) {
 	std::sort(t.begin(), t.end(), convex_gen_cmp);
 	q.push_back(t[0]), q.push_back(t[1]);
 	for (int i = 2; i < t.size(); i++) {
-		while (q.size() > 1 && ((t[i]-q[q.size()-1]) % (q[q.size()-1]-q[q.size()-2]) > 0 || parallel(t[i]-q[q.size()-1], q[q.size()-1]-q[q.size()-2])))
-			q.pop_back();
+		while (q.size() > 1) {
+			point2 p1 = t[i]-q[q.size()-1], p2 = q[q.size()-1]-q[q.size()-2];
+			if (p1 % p2 > 0 || parallel(p1, p2)) q.pop_back();
+			else break;
+		}
 		q.push_back(t[i]);
 	}
 	int pretop = q.size();
 	for (int i = t.size()-1; i >= 0; i--) {
-		while (q.size() > pretop && ((t[i]-q[q.size()-1]) % (q[q.size()-1]-q[q.size()-2]) > 0 || parallel(t[i]-q[q.size()-1], q[q.size()-1]-q[q.size()-2])))
-			q.pop_back();
+		while (q.size() > pretop) {
+			point2 p1 = t[i]-q[q.size()-1], p2 = q[q.size()-1]-q[q.size()-2];
+			if (p1 % p2 > 0 || parallel(p1, p2)) q.pop_back();
+			else break;
+		}
 		q.push_back(t[i]);
 	}
 	q.pop_back();
@@ -263,22 +271,31 @@ int halfplane_cross(const std::vector<line2> &a, convex2 &b) {
 	point2 p;
 	for (int i = 2, k = 0; i < t.size(); i++) {
 		for (; k < q.size() && t[i].s % q[k].s > 0; k++);
-		if (k > 0 && k < q.size() && q[q.size()-1].s % q[0].s > 0 && !parallel(q[q.size()-1].s, q[0].s)) {
-			double r1 = (line_line_cross(q[k], q[k-1], &p), t[i].s % (p - t[i].a) / dis(t[i].s));
-			double r2 = (line_line_cross(q[0], q[q.size()-1], &p), t[i].s % (p - t[i].a) / dis(t[i].s));
+		point2 s1 = q[q.size()-1].s, s2 = q[0].s;
+		if (k > 0 && k < q.size() && s1 % s2 > 0 && !parallel(s1, s2)) {
+			line_line_cross(q[k], q[k-1], &p);
+			double r1 = t[i].s % (p - t[i].a) / dis(t[i].s);
+			line_line_cross(q[0], q[q.size()-1], &p);
+			double r2 = t[i].s % (p - t[i].a) / dis(t[i].s);
 			if (r1 < eps && r2 < eps) {
 				b.clear();
 				return 0;
 			} else if (r1 > -eps && r2 > -eps)
 				continue;
 		}
-		while (q.size() > 1 && (line_line_cross(q[q.size()-1], q[q.size()-2], &p), t[i].s % (p - t[i].a) / dis(t[i].s) < eps)) {
-			q.pop_back();
-			if (k == q.size()) k--;
+		while (q.size() > 1) {
+			line_line_cross(q[q.size()-1], q[q.size()-2], &p);
+			if (t[i].s % (p - t[i].a) / dis(t[i].s) < eps) {
+				q.pop_back();
+				if (k == q.size()) k--;
+			} else break;
 		}
-		while (q.size() > 1 && (line_line_cross(q[0], q[1], &p), t[i].s % (p - t[i].a) / dis(t[i].s) < eps)) {
-			q.pop_front();
-			k--; if (k < 0) k = 0;
+		while (q.size() > 1) {
+			line_line_cross(q[0], q[1], &p);
+			if (t[i].s % (p - t[i].a) / dis(t[i].s) < eps) {
+				q.pop_front();
+				k--; if (k < 0) k = 0;
+			} else break;
 		}
 		q.push_back(t[i]);
 	}
@@ -338,10 +355,12 @@ double dis(point3 a) {
 	return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
 }
 int parallel(point3 a, point3 b) {
-	return a * a < eps * eps || b * b < eps * eps || (a % b) * (a % b) / ((a * a) * (b * b)) < eps * eps;
+	return a * a < eps * eps || b * b < eps * eps
+		|| (a % b) * (a % b) / ((a * a) * (b * b)) < eps * eps;
 }
 int perpend(point3 a, point3 b) {
-	return a * a < eps * eps || b * b < eps * eps || (a * b) * (a * b) / ((a * a) * (b * b)) < eps * eps;
+	return a * a < eps * eps || b * b < eps * eps
+		|| (a * b) * (a * b) / ((a * a) * (b * b)) < eps * eps;
 }
 struct line3 {
 	point3 a, s;
