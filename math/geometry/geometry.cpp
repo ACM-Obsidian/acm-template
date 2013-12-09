@@ -79,7 +79,7 @@ double point_line_dis(point2 a, line2 b, point2 *res = NULL) {
 	if (res != NULL) *res = p;
 	return dis(a - p);
 }
-int line_line_cross(line2 a, line2 b, point2 *res) {
+int line_line_cross(line2 a, line2 b, point2 *res = NULL) {
 	if (parallel(a.s, b.s))
 		if (parallel(b.a - a.a, a.s))
 			return -1;
@@ -205,7 +205,7 @@ int point_convex_inside(point2 a, const convex2 &b) {
 		sum += fabs((b[i] - a) % (b[(i+1)%b.size()] - a));
 	return fabs(sum / (2*area(b)) - 1) < eps;
 }
-int line_convex_cross(line2 a, const convex2 &b, point2 *res1, point2 *res2) {
+int line_convex_cross(line2 a, const convex2 &b, point2 *res1 = NULL, point2 *res2 = NULL) {
 	int cnt = 0;
 	for (int i = 0; i < b.size(); i++) {
 		line2 ltmp; point2 ptmp;

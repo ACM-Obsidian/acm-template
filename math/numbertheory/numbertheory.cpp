@@ -49,7 +49,6 @@ void factor(int n, std::vector<int> &res) {
 		factor(d, res), factor(n / d, res);
 	}
 }
-/* solve a^x = b (mod m) */
 int ind(int a, int b, int m) {
 	a %= m, b %= m;
 	std::map<int, int> hash;
@@ -67,4 +66,9 @@ int ind(int a, int b, int m) {
 		if ((it = hash.find(t)) != hash.end())
 			return i * r + it->second;
 	}
+}
+void prepare_inv(int *inv, int p) {
+	inv[1] = 1;
+	for (int i = 2; i < p; i++)
+		inv[i] = 1LL * inv[p%i] * (p - p/i) % p;
 }
