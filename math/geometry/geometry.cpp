@@ -89,6 +89,44 @@ int line_line_cross(line2 a, line2 b, point2 *res = NULL) {
 	if (res != NULL) *res = a.a + k1 * a.s;
 	return 1;
 }
+int segment_segment_cross(line2 a, line2 b, point2 *res = NULL) {
+	if (a.s * a.s < eps * eps && b.s * b.s < eps * eps)
+		if ((b.a - a.a) * (b.a - a.a) < eps * eps) {
+			if (res != NULL) *res = a.a;
+			return 1;
+		} else
+			return 0;
+	if (parallel(a.s, b.s) && parallel(b.a - a.a, a.s) && parallel(a.a - b.a, b.s)) {
+		double y1, y2, y3, y4;
+		point2 y1p = a.a, y2p = a.a + a.s, y3p = b.a, y4p = b.a + b.s;
+		if (std::abs(a.s.x) < std::abs(a.s.y) || std::abs(b.s.x) < std::abs(b.s.y))
+			y1 = y1p.y, y2 = y2p.y, y3 = y3p.y, y4 = y4p.y;
+		else
+			y1 = y1p.x, y2 = y2p.x, y3 = y3p.x, y4 = y4p.x;
+		if (y1 > y2) std::swap(y1, y2), std::swap(y1p, y2p);
+		if (y3 > y4) std::swap(y3, y4), std::swap(y3p, y4p);
+		if (y2 - y1 < y4 - y3) std::swap(y1, y3), std::swap(y1p, y3p), std::swap(y2, y4), std::swap(y2p, y4p);
+		if (y3 > y2 + (y2 - y1) * eps || y4 < y1 - (y2 - y1) * eps)
+			return 0;
+		else if (fabs(y3 - y2) < (y2 - y1) * eps || fabs(y3 - y4) < eps) {
+			if (res != NULL) *res = y3p;
+			return 1;
+		} else if (fabs(y4 - y1) < (y2 - y1) * eps || fabs(y1 - y2) < eps) {
+			if (res != NULL) *res = y1p;
+			return 1;
+		} else
+			return -1;
+	} else {
+		double k1 = (b.a - a.a) % a.s, k2 = (b.a + b.s - a.a) % a.s;
+		k1 /= a.s * a.s, k2 /= a.s * a.s;
+		double k3 = (a.a - b.a) % b.s, k4 = (a.a + a.s - b.a) % b.s;
+		k3 /= b.s * b.s, k4 /= b.s * b.s;
+		int ret = (k1 < eps && k2 > -eps || k1 > -eps && k2 < eps)
+			&& (k3 < eps && k4 > -eps || k3 > -eps && k4 < eps);
+		if (ret) line_line_cross(a, b, res);
+		return ret;
+	}
+}
 int line_circle_cross(line2 a, circle2 b, point2 *res1 = NULL, point2 *res2 = NULL) {
 	point2 p;
 	double d = point_line_dis(b.a, a, &p);
