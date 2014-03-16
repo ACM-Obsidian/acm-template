@@ -1,67 +1,66 @@
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-namespace Solve {
-    const long MAXN = 205;
-    const long inf = 10000000;
-    long a[MAXN][MAXN] = {0}, r[MAXN] = {0};
-    long x[MAXN] = {0}, y[MAXN] = {0}, stack[MAXN] = {0};
-    bool visx[MAXN] = {0}, visy[MAXN] = {0};
-    long n;
- 
-    #define abs(x) ((x)>0?(-(x)):(x))
-    #define rep(i,n) for (long i = 1; i <= n; i++)
-    #define max(x, y) ((x)>(y)?(x):(y))
-    #define min(x, y) ((x)<(y)?(x):(y))
-    void Input(void) {
-        scanf("%ld", &n);
-        rep(i,n)rep(j,n)a[i][j] = -inf;
-        rep(i,n){
-            long m, l, r, k;
-            scanf("%ld %ld %ld %ld", &m, &l, &r, &k);
-            for (long j = l; j <= r; j++) a[i][j] = abs(m - j) * k;
-         }
-    }
-    long A = 0;
-    bool find(long u) {
-        visx[u] = true;
-        rep(i, n) if (!visy[i]) {
-            long t = x[u] + y[i] - a[u][i];
-            if (!t) {
-                visy[i] = true;
-                if (!r[i] || find(r[i])) {
-                    r[i] = u;
-                    return true;
-                }
-            }else stack[i] = min(t, stack[i]);
-        }
-        return false;
-    }
-    void Work(void) {
-        Input();
-        rep(i ,n) rep(j, n) x[i] = max(x[i], a[i][j]);
-        rep(i, n) {
-            rep(k, n)stack[k] = inf;
-            while (true) {
-                memset(visy, 0, sizeof visy); memset(visx, 0, sizeof visx);
-                if (find(i)) break;
-                long t = inf;
-                rep(k, n) if (!visy[k]) t = min(t, stack[k]);
-                rep(k, n) if (visx[k]) x[k] -= t;
-                rep(k, n) if (visy[k]) y[k] += t; else stack[k] -= t;
-            }
-        }
-        long A = 0, N = 0;
-        rep(i, n){ A -= a[r[i]][i];
-            if (a[r[i]][i] == -inf) {puts("NIE");return;}
-        }
-        printf("%ld\n", A);
-    }
+const int MAXN = 210;
+
+int nx, ny; // 左边的点标号从1到nx，右边点标号从1到ny
+long long inf, cost[MAXN][MAXN], fx[MAXN], fy[MAXN], dist[MAXN]; //权值若为long long的话，只需改动此行即可
+int used[MAXN], maty[MAXN], which[MAXN];
+
+inline void AddEdge(int x, int y, int z) {
+	cost[x][y] = z;
 }
-int main(int argc, char** argv) {
-    #ifdef Debug
-        freopen("1.in", "r", stdin);
-    #endif
-    Solve::Work();
-    return 0;
+
+pair<int, long long> KM(void) {
+	for (int x = 1; x <= nx; x++) {
+		int y0 = 0; maty[0] = x;
+		for (int y = 0; y <= ny; y++) { dist[y] = inf + 1; used[y] = false; }
+
+		do {
+			used[y0] = true;
+			int x0 = maty[y0], y1;
+			long long delta = inf + 1;
+
+			for (int y = 1; y <= ny; y++) if (!used[y]) {
+				long long curdist = cost[x0][y] - fx[x0] - fy[y];
+				if (curdist < dist[y]) {
+					dist[y] = curdist;
+					which[y] = y0;
+				}
+				if (dist[y] < delta) {
+					delta = dist[y];
+					y1 = y;
+				}
+			}
+
+			for (int y = 0; y <= ny; y++) if (used[y]) {
+				fx[maty[y]] += delta;
+				fy[y] -= delta;
+			} else dist[y] -= delta;
+
+			y0 = y1;
+		} while (maty[y0] != 0);
+
+		do {
+			int y1 = which[y0];
+			maty[y0] = maty[y1];
+			y0 = y1;
+		} while (y0);
+	}
+
+	long long ret = 0;
+	int npair = 0;
+	for (int y = 1; y <= ny; y++) {
+		int x = maty[y];
+		if (cost[x][y] < inf) {
+			ret += cost[x][y];
+			npair++;
+		}
+	}
+
+	return make_pair(npair, ret);
+}
+
+inline void clear(void) {
+	memset(fx, 0, sizeof fx);
+	memset(fy, 0, sizeof fy);
+	memset(cost, 0x3f, sizeof cost);
+	inf = cost[0][0];
 }
