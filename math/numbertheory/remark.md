@@ -1,6 +1,7 @@
 数论模板，其中包含：
 \begin{itemize}
 \item ext\_gcd：扩展欧几里得方法解 $ax+by=\gcd(a,b)$，该函数保证当 $a,b>0$ 时 $x>0$。
+\item flsum：欧几里得思想解 $\sum_{x=st}^ed\lfloor\frac{ax+b}c\rfloor$。
 \item power：求 $n^k \bmod r$。
 \item millerrabin,isprime：Miller-Rabin方法判定素数（int以内），采用2、7、61作为测试的质数。
 \item factor：Pollard's rho算法分解质因数。
