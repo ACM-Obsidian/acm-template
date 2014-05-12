@@ -291,6 +291,7 @@ int convex_gen(const convex2 &a, convex2 &b) {
 	}
 	b.clear();
 	for (int i = 0; i < q.size(); i++) b.push_back(q[i]);
+	return 1;
 }
 int halfplane_cross_cmp(line2 a, line2 b) {
 	double c1 = arg(a.s), c2 = arg(b.s);
