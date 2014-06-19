@@ -1,8 +1,6 @@
 // 最大可能的节点数
 const int MAXN = 100010;
-
 // 每个打标记的操作就是更新这个节点的信息，然后对子节点打标记
-
 struct Node {
 	Node *ch[2], *p; int size, value;
 	bool rev;
@@ -29,7 +27,6 @@ struct Node {
 		rev = 0;
 	}
 }Tnull, *null = &Tnull, *data, POOL[MAXN];
-
 class Splay {public:
 	Node *root;
 	inline void rotate(Node *x) {
@@ -40,7 +37,6 @@ class Splay {public:
 		x->SetC(p, !d);
 		p->Update();
 	}
-
 	inline void splay(Node *x, Node *G) {
 		if (G == null) root = x;
 		while (x->p != G) {
@@ -52,7 +48,6 @@ class Splay {public:
 		x->Push();
 		x->Update();
 	}
-
 	inline Node* Renew(int value) {
 		Node *ret = data++;
 		ret->ch[0] = ret->ch[1] =ret->p = null;
@@ -60,10 +55,8 @@ class Splay {public:
 		ret->initInfo();
 		return ret;
 	}
-
 	inline Node* getMin(Node *x) {Node *tmp = x; while (tmp->ch[0] != null) tmp = tmp->ch[0]; return tmp;}
 	inline Node* getMax(Node *x) {Node *tmp = x; while (tmp->ch[1] != null) tmp = tmp->ch[1]; return tmp;}
-
 	// 查询第k大
 	inline Node* getKth(int k) {
 		Node *tmp = root; 
@@ -75,9 +68,7 @@ class Splay {public:
 			else k -= tmp->ch[0]->size + 1, tmp = tmp->ch[1];
 		}
 	}
-
 	// 以下为splay当作平衡树使用
-
 	// 查找树中value = v的元素, 返回之后splay
 	inline Node* find(int v) {
 		Node *tmp = root;
@@ -88,7 +79,6 @@ class Splay {public:
 		}
 		return null;
 	}
-
 	// 统计有多少元素小于等于v, 当flag = 1时，统计多少元素严格小于v, 一定要记得splay最后的那个tmp
 	inline int Count(int v, bool flag = 0) {
 		Node *tmp = root, *last = null; int ret = 0;
@@ -102,7 +92,6 @@ class Splay {public:
 		if (last != null) splay(last, null);
 		return ret;
 	}
-
 	// 删除x这个结点
 	inline void erase(Node* x) {
 		splay(x, null);
@@ -116,7 +105,6 @@ class Splay {public:
 		L->SetC(R, 1); L->p = null; root = L;
 		L->Update();
 	}
-
 	// 插入一个值为value的节点，初始要以Insert(root, null, value)来调用, 返回之后splay
 	inline Node* Insert(Node *&now, Node* father, int value) {
 		if (now == null) {
@@ -130,9 +118,7 @@ class Splay {public:
 		now->Update();
 		return ret;
 	}
-
 	// 以下为splay维护序列, 初始要在原序列中放入一个-inf和inf来防止边界条件
-
 	// 得到原数列中[l,r]区间对应的结点，如果l == r + 1则表示是一个空区间
 	inline Node* getInterval(int l, int r) {
 		assert(l <= r + 1);
@@ -140,7 +126,6 @@ class Splay {public:
 		splay(L, null); splay(R, L);
 		return R->ch[0];
 	}
-
 	// 删除一段区间[l,r]
 	inline void eraseInterval(int l, int r) {
 		getInterval(l, r);
@@ -148,7 +133,6 @@ class Splay {public:
 		root->ch[1]->Update();
 		root->Update();
 	}
-
 	// 在位置l的后面插入一段区间x (0 <= l <= n)
 	inline void insertInterval(int l, Node *x) {
 		Node *L = getKth(l + 1), *R = getKth(l + 2);
@@ -156,7 +140,6 @@ class Splay {public:
 		R->SetC(x, 0);
 		R->Update(); L->Update();
 	}
-
 	// 把数列a的[l,r]构建为一个splay
 	inline Node* Build(int l, int r, int a[]) {
 		if (l > r) return null;
@@ -169,9 +152,7 @@ class Splay {public:
 		return ret;
 	}
 }T;
-
 void clear(void) {
 	data = POOL;
 	T.root = null;
 }
-

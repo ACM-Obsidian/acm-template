@@ -1,19 +1,13 @@
 struct Edge {
-	int y, f, c; Edge *next, *opt;
-	Edge(int y, int f, int c, Edge *next):y(y), f(f), c(c), next(next){}
-	Edge(){}
-	inline void* operator new(size_t, void* p) {return p;}
-}*a[MAXN], *e[MAXN], M[MAXM], *data = M;
-
+	int y, f; Edge *next, *opt;
+}*a[MAXN], DATA[MAXM << 1], *data = DATA;
 inline void Add(int x, int y, int c) {
-	a[x] = new((void*)data++) Edge(y, 1, c, a[x]);
-	a[y] = new((void*)data++) Edge(x, 0, c, a[y]);
-	a[x]->opt = a[y];
-	a[y]->opt = a[x];
+	Edge *tmp = data++;
+	tmp->y = x; tmp->f = c, tmp->next = a[x]; a[x] = tmp;
+	tmp = data++; tmp->y = x; tmp->f = 0; tmp->next = a[y]; a[y] = tmp;
+	a[x]->opt = a[y]; a[y]->opt = a[x];
 }
-
 int n, m, vs, vt, L;
-
 int level[MAXN], d[MAXN];
 inline bool Bfs(void) {
 	memset(level, -1, sizeof level);

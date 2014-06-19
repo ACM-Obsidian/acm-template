@@ -1,15 +1,12 @@
 // string is 1-base, sa is 1-base
 int w[MAXM];
-
 inline void Sort(int a[], int ret[], int n, int m = MAXM - 1) {
 	for (int i = 0; i <= m; i++) w[i] = 0;
 	for (int i = 1; i <= n; i++) w[a[i]]++;
 	for (int i = 1; i <= m; i++) w[i] += w[i - 1];
 	for (int i = n; i >= 1; i--) ret[w[a[i]]--] = i;
 }
-
 int wa[MAXN], wb[MAXN], tmp[MAXN];
-
 inline void getSA(int ch[], int sa[], int n) {
 	int *x = wa, *y = wb;
 	for (int i = 1; i <= n; i++) x[i] = ch[i];
@@ -29,9 +26,7 @@ inline void getSA(int ch[], int sa[], int n) {
 	}
 	sa[0] = n + 1; // for calculate height.
 }
-
 int rank[MAXN];
-
 inline void getHeight(int ch[], int sa[], int height[], int n) {
 	for (int i = 1; i <= n; i++) rank[sa[i]] = i;
 	for (int i = 1, t = 0; i <= n; i++) {
@@ -40,7 +35,3 @@ inline void getHeight(int ch[], int sa[], int height[], int n) {
 		height[rank[i]] = t;
 	}
 }
-
-void Clear(void) {
-}
-

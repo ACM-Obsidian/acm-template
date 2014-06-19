@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <complex>
 const double pi = 3.14159265358979324;
-
 typedef double (*__F) (double);
 double area(double x, double y, double fl, double fmid, double fr) {
 	return (fl + 4 * fmid + fr) * (y - x) / 6;
@@ -18,7 +17,6 @@ double area_simpson(__F f, double x, double y, double zero = 1e-10) {
 	double mid = (x + y) / 2, fl = f(x), fmid = f(mid), fr = f(y);
 	return area_simpson_solve(f, x, mid, y, fl, fmid, fr, area(x, y, fl, fmid, fr), zero);
 }
-
 typedef std::complex<double> complex;
 void fft_prepare(int maxn, complex *&e) {
 	e = new complex[2 * maxn - 1];

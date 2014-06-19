@@ -1,7 +1,6 @@
 struct Node {
 	Node *next[26], *par; int val, end; // 26 is volatile
 }POOL[MAXN << 1], *data, *root, *last; //Note that the size of POOL should be doubled.
-
 inline void Add(int x) {
 	Node *p = last, *np = data++;
 	np->val = p->val + 1; np->end = true;
@@ -25,8 +24,6 @@ inline void Add(int x) {
 	}
 	last = np;
 }
-
 void Clear(void) {
 	data = POOL; last = root = data++;
 }
-

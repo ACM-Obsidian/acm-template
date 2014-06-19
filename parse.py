@@ -2,11 +2,14 @@
 
 import os
 
-remark="remark.md"
+remark="remark.tex"
 main = ""
 
 def dfs(level, path):
     global main
+    if os.path.isfile(path + '/' + remark):
+        i = path + '/' + remark
+        main += "\\input{%s}\n"%(i)
     for i in os.listdir(path):
         j = i
         i = path + '/' + i
@@ -14,9 +17,9 @@ def dfs(level, path):
             main += "\\%ssection{%s}"%(level, j) + "\n"
             dfs(level + "sub", i)
         else:
-            if (j == remark): main += "\\input{%s}\n"%(i)
+            if (j == remark): continue
             else: 
-                if (level != ""): main += "\\code{%s}\\newpage"%(i) + "\n"
+                if (level != ""): main += "\\code{%s}"%(i) + "\n"
 
 dfs("", ".")
 
@@ -45,8 +48,9 @@ print r"""
 	frame=none,
 	breaklines,
 	extendedchars=false
-	keywordstyle=\bfseries\color{blue}, 
-	commentstyle=\itshape\color{mygreen}, 
+	keywordstyle=\bfseries\color{black}, 
+	commentstyle=\itshape\color{black}, 
+	language=C++,
 }
 
 \newcommand{\code}[1]{\lstinputlisting{#1}}
@@ -55,7 +59,7 @@ print r"""
 
 \setCJKmainfont[BoldFont={Adobe Heiti Std}]{Adobe Song Std}
 \setCJKfamilyfont{hei}{Adobe Heiti Std}
-\setmainfont{Times New Roman}
+%\setmainfont{Times New Roman}
 
 \title{Obsidian 模板}
 \author{北京大学}

@@ -5,53 +5,22 @@
 #include <algorithm>
 const double eps = 1e-13;
 const double pi = 3.14159265358979324;
-
 struct point2 {
 	double x, y;
-	point2& operator += (point2 a) {
-		x += a.x, y += a.y;
-		return *this;
-	}
-	point2& operator -= (point2 a) {
-		x -= a.x, y -= a.y;
-		return *this;
-	}
-	point2& operator *= (double a) {
-		x *= a, y *= a;
-		return *this;
-	}
-	point2& operator /= (double a) {
-		x /= a, y /= a;
-		return *this;
-	}
+	point2& operator += (point2 a) { x+=a.x, y+=a.y; return *this; }
+	point2& operator -= (point2 a) { x-=a.x, y-=a.y; return *this; }
+	point2& operator *= (double a) { x*=a, y*=a; return *this; }
+	point2& operator /= (double a) { x/=a, y/=a; return *this; }
 };
-point2 operator + (point2 a, point2 b) {
-	point2 c; c = a; c += b; return c;
-}
-point2 operator - (point2 a, point2 b) {
-	point2 c; c = a; c -= b; return c;
-}
-point2 operator * (point2 a, double b) {
-	point2 c; c = a; c *= b; return c;
-}
-point2 operator * (double a, point2 b) {
-	point2 c; c = b; c *= a; return c;
-}
-point2 operator / (point2 a, double b) {
-	point2 c; c = a; c /= b; return c;
-}
-double operator * (point2 a, point2 b) {
-	return a.x * b.x + a.y * b.y;
-}
-double operator % (point2 a, point2 b) {
-	return a.x * b.y - a.y * b.x;
-}
-double dis(point2 a) {
-	return sqrt(a.x * a.x + a.y * a.y);
-}
-double arg(point2 a) {
-	return atan2(a.y, a.x);
-}
+point2 operator + (point2 a, point2 b) { point2 c(a); c += b; return c; }
+point2 operator - (point2 a, point2 b) { point2 c(a); c -= b; return c; }
+point2 operator * (point2 a, double b) { point2 c(a); c *= b; return c; }
+point2 operator * (double a, point2 b) { point2 c(b); c *= a; return c; }
+point2 operator / (point2 a, double b) { point2 c(a); c /= b; return c; }
+double operator * (point2 a, point2 b) { return a.x*b.x+a.y*b.y; }
+double operator % (point2 a, point2 b) { return a.x*b.y-a.y*b.x; }
+double dis(point2 a) { return sqrt(a.x * a.x + a.y * a.y); }
+double arg(point2 a) { return atan2(a.y, a.x); }
 point2 rotate(point2 a, double th) {
 	point2 b;
 	b.x = a.x * cos(th) - a.y * sin(th);
@@ -345,44 +314,19 @@ int halfplane_cross(const std::vector<line2> &a, convex2 &b) {
 	}
 	return 1;
 }
-
 struct point3 {
 	double x, y, z;
-	point3& operator += (point3 a) {
-		x += a.x, y += a.y, z += a.z;
-		return *this;
-	}
-	point3& operator -= (point3 a) {
-		x -= a.x, y -= a.y, z -= a.z;
-		return *this;
-	}
-	point3& operator *= (double a) {
-		x *= a, y *= a, z *= a;
-		return *this;
-	}
-	point3& operator /= (double a) {
-		x /= a, y /= a, z /= a;
-		return *this;
-	}
+	point3& operator += (point3 a) { x+=a.x,y+=a.y,z+=a.z; return *this; }
+	point3& operator -= (point3 a) { x-=a.x,y-=a.y,z-=a.z; return *this; }
+	point3& operator *= (double a) { x*=a, y*=a, z*=a; return *this; }
+	point3& operator /= (double a) { x/=a, y/=a, z/=a; return *this; }
 };
-point3 operator + (point3 a, point3 b) {
-	point3 c; c = a; c += b; return c;
-}
-point3 operator - (point3 a, point3 b) {
-	point3 c; c = a; c -= b; return c;
-}
-point3 operator * (point3 a, double b) {
-	point3 c; c = a; c *= b; return c;
-}
-point3 operator * (double a, point3 b) {
-	point3 c; c = b; c *= a; return c;
-}
-point3 operator / (point3 a, double b) {
-	point3 c; c = a; c /= b; return c;
-}
-double operator * (point3 a, point3 b) {
-	return a.x * b.x + a.y * b.y + a.z * b.z;
-}
+point3 operator + (point3 a, point3 b) { point3 c(a); c += b; return c; }
+point3 operator - (point3 a, point3 b) { point3 c(a); c -= b; return c; }
+point3 operator * (point3 a, double b) { point3 c(a); c *= b; return c; }
+point3 operator * (double a, point3 b) { point3 c(b); c *= a; return c; }
+point3 operator / (point3 a, double b) { point3 c(a); c /= b; return c; }
+double operator * (point3 a, point3 b) { return a.x*b.x+a.y*b.y+a.z*b.z; }
 point3 operator % (point3 a, point3 b) {
 	point3 c;
 	c.x = a.y * b.z - a.z * b.y;
@@ -390,9 +334,7 @@ point3 operator % (point3 a, point3 b) {
 	c.z = a.x * b.y - a.y * b.x;
 	return c;
 }
-double dis(point3 a) {
-	return sqrt(a.x * a.x + a.y * a.y + a.z * a.z);
-}
+double dis(point3 a) { return sqrt(a.x * a.x + a.y * a.y + a.z * a.z); }
 int parallel(point3 a, point3 b) {
 	return a * a < eps * eps || b * b < eps * eps
 		|| (a % b) * (a % b) / ((a * a) * (b * b)) < eps * eps;

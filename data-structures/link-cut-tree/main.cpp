@@ -1,5 +1,4 @@
 const int MAXN = 100010;
-
 struct Node {
 	Node *ch[2], *p; int size, value;
 	bool rev;
@@ -22,12 +21,9 @@ struct Node {
 		size = ch[0]->size + ch[1]->size + 1;
 	}
 }Tnull, *null = &Tnull, *fim[MAXN];
-
 // 要记得额外更新null的信息
 Node::Node(int _value){ch[0] = ch[1] = p = null; rev = 0;}
-
 inline bool isRoot(Node *x) {return x->p == null || (x != x->p->ch[0] && x != x->p->ch[1]);}
-
 inline void rotate(Node *x) {
 	Node *p = x->p; bool d = x->dir();
 	p->Push(); x->Push();
@@ -36,7 +32,6 @@ inline void rotate(Node *x) {
 	x->SetC(p, !d);
 	p->Update();
 }
-
 inline void splay(Node *x) {
 	x->Push();
 	while (!isRoot(x)) {
@@ -48,7 +43,6 @@ inline void splay(Node *x) {
 	}
 	x->Update();
 }
-
 inline Node* Access(Node *x) {
 	Node *t = x, *q = null;
 	for (; x != null; x = x->p) {
@@ -57,15 +51,12 @@ inline Node* Access(Node *x) {
 	splay(t); //info will be updated in the splay;
 	return q;
 }
-
 inline void Evert(Node *x) {
 	Access(x); x->Rev();
 }
-
 inline void link(Node *x, Node *y) {
 	Evert(x); x->p = y;
 }
-
 inline Node* getRoot(Node *x) {
 	Node *tmp = x;
 	Access(x);
@@ -73,7 +64,6 @@ inline Node* getRoot(Node *x) {
 	splay(tmp);
 	return tmp;
 }
-
 // 一定要确定x和y之间有边
 inline void cut(Node *x, Node *y) { 	
 	Access(x); splay(y);
@@ -81,13 +71,10 @@ inline void cut(Node *x, Node *y) {
 	Access(x); splay(y);
 	y->p = null;
 }
-
 inline Node* getPath(Node *x, Node *y) {
 	Evert(x); Access(y);
 	return y;
 }
-
 inline void clear(void) {
 	null->rev = 0; null->sie = 0; null->value = 0;
 }
-

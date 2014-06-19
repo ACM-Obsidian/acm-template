@@ -2,16 +2,12 @@ struct Edge {
     int y, f, c; Edge *next, *opt;
     Edge(int y, int f, int c, Edge *next):y(y), f(f), c(c), next(next){}
 }*a[MAXN];
- 
 inline void AddEdge(int x, int y, int f, int c) {
- // printf("X = %d, Y = %d, F = %d, C = %d\n", x, y, f, c);
     a[x] = new Edge(y, f, c, a[x]);
     a[y] = new Edge(x, 0, -c, a[y]);
     a[x]->opt = a[y]; a[y]->opt = a[x];
 }
- 
 int d[MAXN], vis[MAXN], dis[MAXN]; Edge *path[MAXN];
- 
 inline pair<int, int> Spfa(void) {
     int Flow = 0, Cost = 0;
     while (true) {
@@ -49,4 +45,3 @@ inline pair<int, int> Spfa(void) {
     }
     return make_pair(Flow, Cost);
 }
-

@@ -9,20 +9,17 @@ void ext_gcd(int a, int b, int &x, int &y) {
 	else if (a > b) ext_gcd(a % b, b, x, y), y += a / b * x;
 	else ext_gcd(a, b % a, x, y), x += b / a * y;
 }
-long long flsum_t (long long a, long long b, long long c, long long n)
-{
+long long flsum_t (long long a, long long b, long long c, long long n) {
 	if (n < 0) return 0;
 	if (c < 0) a = -a, b = -b, c = -c;
 	n++; long long res = 0;
-	if (a < 0 || a >= c)
-	{
+	if (a < 0 || a >= c) {
 		long long ra = (a % c + c) % c;
 		long long k = (a - ra) / c;
 		res += k * n * (n - 1) / 2;
 		a = ra;
 	}
-	if (b < 0 || b >= c)
-	{
+	if (b < 0 || b >= c) {
 		long long rb = (b % c + c) % c;
 		long long k = (b - rb) / c;
 		res += k * n;
@@ -31,8 +28,7 @@ long long flsum_t (long long a, long long b, long long c, long long n)
 	if (a * n + b < c) return res;
 	else return res + flsum_t(c, (a * n + b) % c, a, (a * n + b) / c - 1);
 }
-long long flsum (long long a, long long b, long long c, long long st, long long ed)
-{
+long long flsum (long long a, long long b, long long c, long long st, long long ed) {
 	return flsum_t(a, b, c, ed) - flsum_t(a, b, c, st - 1);
 }
 int power(int n, int k, int r) {

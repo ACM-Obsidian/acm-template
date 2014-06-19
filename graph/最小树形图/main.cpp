@@ -2,13 +2,11 @@ typedef pair<int, int> PII;
 PII tmp[MAXN];
 int dis[MAXN][MAXN]; int map[MAXN][MAXN];
 int vis[MAXN], q[MAXN], inp[MAXN];
-
 int Dfs(int u) {
 	vis[u] = true; int ret = 1;
 	for (int i = 1; i <= n; i++) if (map[u][i] && !vis[i]) ret += Dfs(i);
 	return ret;
 }
-
 int Zhuliu(void) {
 	memset(map, 0, sizeof map);
 	memset(vis, 0, sizeof vis);

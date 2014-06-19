@@ -11,4 +11,3 @@ inline int Manacher(int a[], int n, int ret[]) {
 	}
 	return Ans;
 }
-

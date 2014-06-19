@@ -1,9 +1,7 @@
 const int MAXN = 10000;
-
 int match[MAXN];  
 int levelx[MAXN], levely[MAXN], link[MAXN]; 
 int d[MAXN]; 
-
 inline bool Bfs(void) { 
 	int head = 1, tail = 0; 
 	memset(levely, 0, sizeof levely); 
@@ -22,7 +20,6 @@ inline bool Bfs(void) {
 	} 
 	return ret; 
 } 
-
 bool Find(int u) { 
 	for (Edge *p = a[u]; p; p = p->next) if (levely[p->y] == levelx[u] + 1) { 
 		levely[p->y] = 0; 
@@ -33,17 +30,14 @@ bool Find(int u) {
 	} 
 	return false; 
 } 
-
 inline void Match(void) { 
 	while (Bfs()) 
 		for (int i = 1; i <= n; i++) 
 			if (!match[i]) Find(i); 
 } 
-
 inline void clear(void) {
 	memset(match, 0, sizeof match);
 	memset(link, 0, sizeof link);
 	memset(levelx, 0, sizeof levelx);
 	memset(levely, 0, sizeof levely);
 }
-
