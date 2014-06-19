@@ -48,8 +48,8 @@ pair<int, long long> KM(void) {
 	return make_pair(npair, ret);
 }
 inline void clear(void) {
-	memset(fx, 0, sizeof fx);
-	memset(fy, 0, sizeof fy);
+	memset(fx, 0x9f, sizeof fx);
+	memset(fy, 0x9f, sizeof fy);
 	memset(cost, 0x3f, sizeof cost);
 	memset(maty, 0, sizeof maty);
 	inf = cost[0][0];
