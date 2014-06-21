@@ -35,9 +35,15 @@ print r"""
 \usepackage{indentfirst}
 \usepackage{xeCJK}
 \usepackage{titlesec}
+\usepackage{fancyhdr}
 
 \usepackage{listings} %插入代码
 \usepackage{xcolor} %代码高亮
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\thepage}
+\lhead{Peking University}
  
 \definecolor{mygreen}{rgb}{0,0.6,0}
 \definecolor{AnswerColor}{rgb}{0.8,0,0}
@@ -61,8 +67,8 @@ print r"""
 \setCJKfamilyfont{hei}{Adobe Heiti Std}
 %\setmainfont{Times New Roman}
 
-\title{Obsidian 模板}
-\author{北京大学}
+\title{Obsidian Team Reference}
+\author{Peking University}
 \date{\today}
 
 \begin{document}
