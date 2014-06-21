@@ -1,51 +1,71 @@
-#include <stdio.h>
-#include <ctype.h>
-#pragma GCC optimize ("O3")
-#include <math.h>
-#define REP(i,l,n) for(i = l; i <= n; i++)
-long double zero = 1e-6, eps = 1e-6;
-int x[100010], y[100010];int i, j, n, N, l = 1, r, m = 5; long double a[50010][6];
-void ins(long long x1, long long y1, long long x2, long long y2) {
-	++N; a[N][0] = x2*y1-x1*y2 - eps, a[N][3] = -(a[N][1] = y2 - y1), a[N][4] = -(a[N][2] = x1 - x2), a[N][5] = 1;
-}
-void nzk(int r, int c) {
-	long double t = -a[r][c]; a[r][c] = -1;
-	REP(i, 0, m) a[r][i] /= t;
-	REP(i, 0, N) if (i != r && fabs(a[i][c]) > zero) {
+const long double eps = 1e-9;
+const int MAXN = 10100; // 最大约束个数
+const int MAXM = 1010; // 最大变量个数
+const long double inf = 1e100;
+
+int next[MAXM]; long double a[MAXN][MAXM], b[MAXM];
+int where[MAXM + MAXN]; // where[i] 表示原来第 i 个变量现在在哪个位置
+int pos[MAXM + MAXN]; // pos[i] 表示第 i 个位置现在是哪个变量
+
+int n, m;
+
+void pivot(int r, int c) {
+	int &x = pos[r + m], &y = pos[c];
+	swap(where[x], where[y]); swap(x, y);
+	long double t = -a[r][c]; a[r][c] = -1; 
+	int last = MAXM - 1;
+	for (int i = 0; i <= m; i++) {
+		a[r][i] /= t;
+		if (fabs(a[r][i]) > eps) next[last] = i, last = i;
+	}
+	next[last] = -1;
+	for (int i = 0; i <= n; i++) if (i != r && fabs(a[i][c]) > eps) {
 		t = a[i][c], a[i][c] = 0;
-		REP(j, 0, m) a[i][j] += a[r][j] * t;
+		for (int j = next[MAXM - 1]; j != -1; j = next[j])
+			a[i][j] += a[r][j] * t;
 	}
 }
-int debug = 0;
-long double gao(void) {
-	int r = 0, c; long double best = 1e100, t;
-	REP(i, 1, N) if (a[i][0] < best) best = a[i][0], r = i; if (!r) return 0; nzk(r, m);
-	int tmp = 0;
-	for(;;) { c = r = -1, best = -1e100; tmp++; if (tmp > debug) debug = tmp;
-		if (a[0][0] >= -zero) return a[0][0];
-		REP(i, 1, m) if (a[0][i] > zero) {c = i; break;}
-		if (c < 0) return a[0][0];
-		REP(i, 1, N) if (a[i][c] < -zero && (t = a[i][0] / a[i][c]) > best) best = t, r = i;
-		if (r < 0) return a[0][0]; nzk(r, c);
+
+long double get(void) {
+	long double best, t; int r, c;
+	for (;;) {
+		r = c = -1, best = -inf;
+		for (int i = 1; i <= m; i++) if (a[0][i] > eps) {c = i; break;}
+		if (c == -1) return a[0][0]; // 从这里返回表示找到了最优解
+		for (int i = 1; i <= n; i++) if (a[i][c] < -eps && (t = a[i][0] / a[i][c]) > best) best = t, r = i;
+		if (r == -1) return inf; // 从这里返回表示最优解为inf
+		pivot(r, c);
 	}
 }
-int ScanInt(void) {
-	int r = 0, c, d;
-	while (!isdigit(c = getchar()) && c != '-');
-	if (c != '-') r = c - '0'; d = c;
-	while ( isdigit(c = getchar())) r = r * 10 + c - '0';
-	return d=='-'?-r:r;
-}
-int main(void) {
-//	freopen("in", "r", stdin);
-	scanf("%d", &n); r = n / 2, l = 1;
-	if (n <= 100) zero = 1e-7; else zero = 1e-6;
-	REP(i,1,n) x[i] = ScanInt(), y[i] = ScanInt(), x[i + n] = x[i], y[i + n] = y[i];
-	while (l <= r) { REP(i, 0, m-1) a[0][i] = 0; a[0][m] = -1;
-		int mid = (l + r) >> 1; N = 0;
-		REP(i, 1, n) ins(x[i], y[i], x[i + mid + 1], y[i + mid + 1]);
-		if (gao()>-zero) l = mid + 1; else r = mid - 1;
+
+int init(void) {
+	for (int i = 1; i <= m + n + 1; i++) where[i] = i, pos[i] = i;
+	long double best = -eps, r = 0;
+	for (int i = 1; i <= n; i++) if (a[i][0] < best) best = a[i][0], r = i;
+	if (!r) return 1;
+	for (int i = 0; i <= m; i++) b[i] = a[0][i], a[0][i] = 0; a[0][m + 1] = -1;
+	for (int i = 1; i <= n; i++) a[i][m + 1] = 1; m++;
+	pivot(r, m);
+	long double tmp = get();
+	if (tmp < -eps) return 0; else {
+		if (where[m] > m) {
+			for (int i = 1; i <= m; i++) if (fabs(a[where[m] - m][i]) > eps) {
+				pivot(where[m] - m, i);
+				break;
+			}
+		}
+		for (int i = 0; i <= n; i++) a[i][where[m]] = 0;
+		for (int i = 0; i <= m; i++) a[0][i] = 0; a[0][0] = b[0];
+		for (int i = 1; i <= m; i++) if (where[i] > m) {
+			int t = where[i] - m;
+			for (int j = 0; j <= m; j++) a[0][j] += b[i] * a[t][j];
+		} else a[0][where[i]] += b[i];
+		return 1;
 	}
-	printf("%d\n", l);
-	return 0;
 }
+
+long double process(void) {
+	if (!init()) return -inf;
+	return get();
+}
+
