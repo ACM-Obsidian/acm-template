@@ -3,7 +3,7 @@ struct Edge {
 }*a[MAXN], DATA[MAXM << 1], *data = DATA;
 inline void Add(int x, int y, int c) {
 	Edge *tmp = data++;
-	tmp->y = x; tmp->f = c, tmp->next = a[x]; a[x] = tmp;
+	tmp->y = y; tmp->f = c, tmp->next = a[x]; a[x] = tmp;
 	tmp = data++; tmp->y = x; tmp->f = 0; tmp->next = a[y]; a[y] = tmp;
 	a[x]->opt = a[y]; a[y]->opt = a[x];
 }
